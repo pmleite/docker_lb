@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+
+  web:
+    image: nginx
+    volumes:
+      - ./cfg:/etc/nginx/
+      - ./src:/var/www/localhost/htdocs
+      - ./crt:/etc/ssl/certs
+      - ./ssl:/etc/ssl/private
+    ports:
+      - 8000:8000
+      - 443:443
+
+  web2:
+  image: nginx
+  volumes:
+  ports:
+    - 8000:8000
+
+
+  lb:
+    image: jrofurtado/nghttpx-autoreload-with-healthcheck:1.0.0
+    restart: always
+    volumes:
+      - lb-data:/volume
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      PARAMS: '-f"*,80;no-tls"
+               -b"web,443;;dns;"
+               -f"*,80;no-tls"
+               -b"web2,8000;;dns;redirect-if-not-tls"'
+ 
+ 
