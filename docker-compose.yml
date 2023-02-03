@@ -1,3 +1,4 @@
+#exemplo da implementação de um load balancer com o nghttpx em docker
 version: '3.8'
 
 services:
@@ -20,19 +21,23 @@ services:
       - lb-nw
       - fo-nw
 
+
+#web server A
   foa:
     container_name: my_foa
     image: nginx:latest
     networks:
       - fo-nw
       - lb-nw
-  
+
+#web server B 
   fob:
     container_name: my_fob
     image: nginx:latest
     networks:
       - fo-nw
       - lb-nw
+
 
 networks:
   lb-nw:
