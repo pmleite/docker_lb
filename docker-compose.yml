@@ -8,17 +8,27 @@ services:
     environment:
       PARAMS: '
         -f"*,80;no-tls" 
-        -b"fo,8888;;dns;"'
+        -b"foa,80;;dns;"
+        -f"*,8888;no-tls" 
+        -b"fob,80;;dns;"'
     ports:
       - 80:80
+      - 8888:80
     volumes:
       - lb-data:/volume
     networks:
       - lb-nw
       - fo-nw
 
-  fo:
-    container_name: my_fo
+  foa:
+    container_name: my_foa
+    image: nginx:latest
+    networks:
+      - fo-nw
+      - lb-nw
+  
+  fob:
+    container_name: my_fob
     image: nginx:latest
     networks:
       - fo-nw
